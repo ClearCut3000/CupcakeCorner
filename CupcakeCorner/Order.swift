@@ -26,12 +26,35 @@ class Order: ObservableObject, Codable {
   @Published var addSprinkles = false
 
   @Published var name = ""
+  var nameIsValid: Bool {
+    if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+      return false
+    }
+    return true
+  }
+
   @Published var streetAddress = ""
+  var streetAddressIsValid: Bool {
+    if streetAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+      return false
+    }
+    return true
+  }
+
   @Published var city = ""
+  var cityIsValid: Bool {
+    guard !city.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
+    return city.rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) == nil
+  }
+
   @Published var zip = ""
+  var zipIsValid: Bool {
+    guard !zip.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
+    return CharacterSet(charactersIn: zip).isSubset(of: CharacterSet.decimalDigits)
+  }
 
   var hasValidAddress: Bool {
-    if name.isEmpty || streetAddress.isEmpty || city.isEmpty || zip.isEmpty {
+    if nameIsValid || streetAddressIsValid || cityIsValid || zipIsValid {
       return false
     }
     return true
@@ -83,5 +106,5 @@ class Order: ObservableObject, Codable {
   }
 
   //MARK: - Init
-  init() {}
+  init() { }
 }
